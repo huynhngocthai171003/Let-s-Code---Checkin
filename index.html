@@ -66,7 +66,19 @@ button {
 </form>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbz2xMh0MpAzH0QS9i32CUEWFDrIJg-54CKuNYbG4Eslu3Rk2YiRTr1MNUmiR0sT09N1mA/exec"; // 👈 Dán link /exec ở Bước 3 vào đây
+const API_URL = "https://script.google.com/macros/s/AKfycbz2xMh0MpAzH0QS9i32CUEWFDrIJg-54CKuNYbG4Eslu3Rk2YiRTr1MNUmiR0sT09N1mA/exec"; 
+
+// 🔍 Hàm lấy địa chỉ từ lat/lng bằng OpenStreetMap (FREE – không cần API KEY)
+async function getAddress(lat, lng) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+    let res = await fetch(url);
+    let data = await res.json();
+    return data.display_name || "Không xác định";
+  } catch (e) {
+    return "Không lấy được địa chỉ";
+  }
+}
 
 async function sendData() {
   let hoten = document.getElementById("hoten").value.trim();
@@ -87,6 +99,10 @@ async function sendData() {
       let lat = pos.coords.latitude;
       let lng = pos.coords.longitude;
 
+      // 📍 Lấy địa chỉ từ OSM
+      let address = await getAddress(lat, lng);
+
+      // 🖼 Xử lý ảnh
       let base64img = "";
       if (imgFile) {
         base64img = await toBase64(imgFile);
@@ -101,14 +117,18 @@ async function sendData() {
           mode,
           lat,
           lng,
+          address,
           image: base64img
         })
       })
       .then(r => r.json())
       .then(res => {
         statusBox.style.color = "lightgreen";
-        statusBox.innerHTML = `✔️ Ghi nhận thành công!<br>
-          🖼 <a href="${res.imageUrl}" target="_blank" style="color:cyan;">Xem ảnh</a>`;
+        statusBox.innerHTML = `
+          ✔️ Ghi nhận thành công!<br><br>
+          🏠 <b>Địa chỉ:</b><br>${address}<br><br>
+          🖼 <a href="${res.imageUrl}" target="_blank" style="color:cyan;">Xem ảnh</a>
+        `;
       })
       .catch(err => {
         statusBox.style.color = "red";
@@ -122,7 +142,7 @@ async function sendData() {
   });
 }
 
-// Đổi file ảnh thành base64
+// 🔁 Chuyển file ảnh → base64
 function toBase64(file) {
   return new Promise((resolve, reject) => {
     let reader = new FileReader();
@@ -132,6 +152,7 @@ function toBase64(file) {
   });
 }
 </script>
+
 
 </body>
 </html>
