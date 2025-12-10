@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check-in</title>
+
+<style>
+body {
+  background: #1e1e2e;
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+  font-family: Arial, sans-serif;
+}
+.form {
+  width: 320px;
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  color: white;
+}
+.form h2 {
+  margin-top: 0;
+}
+.input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  background: #222;
+  color: white;
+  border: none;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background: #4f46e5;
+  border: none;
+  border-radius: 8px;
+  margin-top: 15px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<form class="form" onsubmit="event.preventDefault(); sendData();">
+  <h2>CHECK-IN</h2>
+
+  <input id="hoten" class="input" placeholder="Họ và tên">
+
+  <select id="mode" class="input">
+    <option value="Online">Online</option>
+    <option value="Offline">Offline</option>
+  </select>
+
+  <label style="margin-top:10px; font-size:14px;">Chụp ảnh / chọn ảnh:</label>
+  <input id="imageInput" type="file" accept="image/*" capture="camera" class="input">
+
+  <button>Gửi điểm danh</button>
+
+  <div id="status" style="margin-top:10px; font-size:14px;"></div>
+</form>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbz2xMh0MpAzH0QS9i32CUEWFDrIJg-54CKuNYbG4Eslu3Rk2YiRTr1MNUmiR0sT09N1mA/exec"; // 👈 Dán link /exec ở Bước 3 vào đây
+
+async function sendData() {
+  let hoten = document.getElementById("hoten").value.trim();
+  let mode = document.getElementById("mode").value;
+  let imgFile = document.getElementById("imageInput").files[0];
+  let statusBox = document.getElementById("status");
+
+  if (!hoten) {
+    statusBox.innerHTML = "⚠️ Vui lòng nhập họ tên!";
+    statusBox.style.color = "red";
+    return;
+  }
+
+  statusBox.innerHTML = "⏳ Đang lấy vị trí...";
+  statusBox.style.color = "white";
+
+  navigator.geolocation.getCurrentPosition(async pos => {
+      let lat = pos.coords.latitude;
+      let lng = pos.coords.longitude;
+
+      let base64img = "";
+      if (imgFile) {
+        base64img = await toBase64(imgFile);
+      }
+
+      statusBox.innerHTML = "⏳ Đang gửi dữ liệu...";
+
+      fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          hoten,
+          mode,
+          lat,
+          lng,
+          image: base64img
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        statusBox.style.color = "lightgreen";
+        statusBox.innerHTML = `✔️ Ghi nhận thành công!<br>
+          🖼 <a href="${res.imageUrl}" target="_blank" style="color:cyan;">Xem ảnh</a>`;
+      })
+      .catch(err => {
+        statusBox.style.color = "red";
+        statusBox.innerHTML = "❌ Lỗi khi gửi dữ liệu!";
+        console.error(err);
+      });
+
+  }, err => {
+      statusBox.style.color = "red";
+      statusBox.innerHTML = "❌ Không lấy được GPS! Hãy bật định vị.";
+  });
+}
+
+// Đổi file ảnh thành base64
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+</script>
+
+</body>
+</html>
