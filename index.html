@@ -2,147 +2,257 @@
 <html lang="vi">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Check-in</title>
+<title>Check In - Out</title>
 
 <style>
-body {
-  background: #1e1e2e;
-  display: flex;
-  justify-content: center;
-  padding-top: 40px;
-  font-family: Arial, sans-serif;
+/* From Uiverse.io by Prakhar227 */ 
+.orange {
+  color: #caf438;
 }
-.form {
-  width: 320px;
-  background: #111;
-  padding: 20px;
-  border-radius: 12px;
+
+.form-container {
+  max-width: 700px;
+  margin: 20px auto;
+  background-color: #001925;
+  padding: 30px;
+  border-left: 5px solid #caf438;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%
+  );
+}
+
+.heading {
+  display: block;
   color: white;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
 }
-.form h2 {
-  margin-top: 0;
+.c1 {
+  display: block;
+  color: #d3f35f;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
 }
-.input {
+
+.c2 {
+  display: block;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.form-container .form .input {
+  color: #87a4b6;
+  width: 100%;
+  background-color: #002733;
+  border: none;
+  outline: none;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+  border-left: 1px solid transparent;
+}
+
+.form-container .form .input:focus {
+  border-left: 5px solid #caf438;
+}
+
+.form-container .form .textarea {
   width: 100%;
   padding: 10px;
-  border-radius: 8px;
-  margin-top: 10px;
-  background: #222;
-  color: white;
   border: none;
+  outline: none;
+  background-color: #013747;
+  color: #caf438;
+  font-weight: bold;
+  resize: none;
+  max-height: 150px;
+  margin-bottom: 20px;
+  border-left: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
 }
-button {
+
+.form-container .form .textarea:focus {
+  border-left: 5px solid #caf438;
+}
+
+.form-container .form .button-container {
+  display: flex;
+  gap: 10px;
+}
+
+.form-container .form .button-container .send-button {
+  flex-basis: 70%;
+  background: #caf438;
+  padding: 10px;
+  color: #001925;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-container .form .button-container .send-button:hover {
+  background: transparent;
+  border: 1px solid #ff7a01;
+  color: #caf438;
+}
+
+.form-container .form .button-container .reset-button-container {
+  filter: drop-shadow(1px 1px 0px #ff7a01);
+  flex-basis: 30%;
+}
+
+.form-container .form .button-container .reset-button-container .reset-button {
+  position: relative;
+  text-align: center;
+  padding: 10px;
+  color: #caf438;
+  font-weight: bold;
+  background: #001925;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0 100%
+  );
+  transition: all 0.2s ease-in-out;
+}
+
+.form-container
+  .form
+  .button-container
+  .reset-button-container
+  .reset-button:hover {
+  background: #caf438;
+  color: #001925;
+}
+.login-button {
+  display: block;
   width: 100%;
-  padding: 12px;
-  background: #4f46e5;
+  font-weight: bold;
+  background: #D3F35F;
+  color: black;
+  padding-block: 15px;
+  margin: 20px auto;
   border: none;
-  border-radius: 8px;
-  margin-top: 15px;
-  color: white;
-  font-size: 16px;
   cursor: pointer;
 }
+
+
 </style>
 </head>
 
 <body>
 
+<!-- From Uiverse.io by Prakhar227 --> 
+<div class="form-container">
 <form class="form" onsubmit="event.preventDefault(); sendData();">
-  <h2>CHECK-IN</h2>
 
-  <input id="hoten" class="input" placeholder="Họ và tên">
+  <div class="form">
+    <span class="heading">CHECK IN - OUT</span>
+    <span class="c1">Cùng điểm danh nhé</span>
 
-  <select id="mode" class="input">
-    <option value="Online">Online</option>
-    <option value="Offline">Offline</option>
-  </select>
+    <input  required class="input" id="hoten" placeholder="Họ và tên" />
+    <input id="imageInput" type="file" accept="image/*" capture="camera" class="input">
+     <select id="mode" class="input" style="width: 100%;">
+      <option value="Online">Online</option>
+      <option value="Offline">Offline</option>
+    </select>
 
-  <label style="margin-top:10px; font-size:14px;">Chụp ảnh / chọn ảnh:</label>
-  <input id="imageInput" type="file" accept="image/*" capture="camera" class="input">
-
-  <button>Gửi điểm danh</button>
-
-  <div id="status" style="margin-top:10px; font-size:14px;"></div>
-</form>
+    <!-- Check-in / Check-out -->
+    <select id="statusType" class="input" style="width: 100%;">
+      <option value="Check-in">Check-in</option>
+      <option value="Check-out">Check-out</option>
+    </select>
+    <span id="status" class="c2"></span>
+    <input class="login-button " type="submit" value="Gửi thông tin">
+    
+    </div>
+  </div>
+  </form>
+</div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxFykHVPPn7qmHozjLg0p6ZwNJ0XXO_4FnKanWvIIJuTxQZnCwQnY2DvNm-WMYKTcHD/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbz7m40_PGKgclV1K0guozJT6hXGcFVGrisUyyideWFamAoZF2pqaVA9Bk8t9VqWapnijw/exec";  // 👉 Dán link /exec vào đây
 
-// 🔍 Hàm lấy địa chỉ từ lat/lng bằng OpenStreetMap (FREE – không cần API KEY)
 async function getAddress(lat, lng) {
   try {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+    let url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
     let res = await fetch(url);
     let data = await res.json();
     return data.display_name || "Không xác định";
-  } catch (e) {
+  } catch {
     return "Không lấy được địa chỉ";
   }
 }
 
 async function sendData() {
   let hoten = document.getElementById("hoten").value.trim();
-  let mode = document.getElementById("mode").value;
+  let mode  = document.getElementById("mode").value;
+  let type  = document.getElementById("statusType").value;
   let imgFile = document.getElementById("imageInput").files[0];
   let statusBox = document.getElementById("status");
 
   if (!hoten) {
-    statusBox.innerHTML = "⚠️ Vui lòng nhập họ tên!";
+    statusBox.innerHTML = "⚠ Vui lòng nhập họ tên!";
     statusBox.style.color = "red";
     return;
   }
 
   statusBox.innerHTML = "⏳ Đang lấy vị trí...";
-  statusBox.style.color = "white";
+  statusBox.style.color = "#444";
 
   navigator.geolocation.getCurrentPosition(async pos => {
-      let lat = pos.coords.latitude;
-      let lng = pos.coords.longitude;
+    let lat = pos.coords.latitude;
+    let lng = pos.coords.longitude;
 
-      // 📍 Lấy địa chỉ từ OSM
-      let address = await getAddress(lat, lng);
+    let address = await getAddress(lat, lng);
 
-      // 🖼 Xử lý ảnh
-      let base64img = "";
-      if (imgFile) {
-        base64img = await toBase64(imgFile);
-      }
+    let base64img = "";
+    if (imgFile) base64img = await toBase64(imgFile);
 
-      statusBox.innerHTML = "⏳ Đang gửi dữ liệu...";
+    statusBox.innerHTML = "⏳ Đang gửi dữ liệu...";
 
-      fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({
-          hoten,
-          mode,
-          lat,
-          lng,
-          address,
-          image: base64img
-        })
+    fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        hoten,
+        mode,
+        type,
+        lat,
+        lng,
+        address,
+        image: base64img
       })
-      .then(r => r.json())
-      .then(res => {
-        statusBox.style.color = "lightgreen";
-        statusBox.innerHTML = `
-          ✔️ Ghi nhận thành công!<br><br>
-          🏠 <b>Địa chỉ:</b><br>${address}<br><br>
-          🖼 <a href="${res.imageUrl}" target="_blank" style="color:cyan;">Xem ảnh</a>
-        `;
-      })
-      .catch(err => {
-        statusBox.style.color = "red";
-        statusBox.innerHTML = "❌ Lỗi khi gửi dữ liệu!";
-        console.error(err);
-      });
+    })
+    .then(r => r.json())
+    .then(res => {
+      statusBox.style.color = "green";
+      statusBox.innerHTML = "✔ Ghi nhận thành công!";
+    })
+    .catch(err => {
+      console.error(err);
+      statusBox.style.color = "red";
+      statusBox.innerHTML = "❌ Lỗi gửi dữ liệu!";
+    });
 
   }, err => {
       statusBox.style.color = "red";
-      statusBox.innerHTML = "❌ Không lấy được GPS! Hãy bật định vị.";
+      statusBox.innerHTML = "❌ Không lấy được GPS!";
   });
 }
 
-// 🔁 Chuyển file ảnh → base64
+// Convert image → Base64
 function toBase64(file) {
   return new Promise((resolve, reject) => {
     let reader = new FileReader();
@@ -153,6 +263,4 @@ function toBase64(file) {
 }
 </script>
 
-
 </body>
-</html>
